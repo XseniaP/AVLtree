@@ -163,11 +163,11 @@ public class AVLTree {
     public interface IAVLNode{
         public int getKey(); //returns node's key (for virtuval node return -1)
         public String getValue(); //returns node's value [info] (for virtuval node return null)
-        public void setLeft(IAVLNode); //sets left child
+        public void setLeft(IAVLNode node ); //sets left child
         public IAVLNode getLeft(); //returns left child (if there is no left child return null)
-        public void setRight(IAVLNode); //sets right child
+        public void setRight(IAVLNode node ); //sets right child
         public IAVLNode getRight(); //returns right child (if there is no right child return null)
-        public void setParent(IAVLNode); //sets parent
+        public void setParent(IAVLNode node ); //sets parent
         public IAVLNode getParent(); //returns the parent (if there is no parent return null)
         public boolean isRealNode(); // Returns True if this is a non-virtual AVL node
         public void setSubtreeSize(); // sets the number of real nodes in this node's subtree
@@ -184,30 +184,58 @@ public class AVLTree {
      * (It must implement IAVLNode)
      */
     public class AVLNode implements IAVLNode{
+        String info;
+        int key;
+        int height;
+        IAVLNode left, right;
+
+        public AVLNode(int _key,int _height,String _info,IAVLNode _left,IAVLNode _right){
+            key = _key;
+            height = _height;
+            info = _info;
+            left = _left;
+            right = _right;
+        }
+        public AVLNode(int _key){
+            key = _key;
+            height = 0;
+            info = "";
+            left = null;
+            right = null;
+        }
+
+
+
         public int getKey()
         {
-            return 42; // to be replaced by student code
+            return key; // to be replaced by student code
         }
         public String getValue()
         {
-            return null; // to be replaced by student code
+            return info; // to be replaced by student code
         }
+
+        @Override
         public void setLeft(IAVLNode node)
         {
-//            return null; // to be replaced by student code
+            left = node;
         }
         public IAVLNode getLeft()
         {
-            return null; // to be replaced by student code
+            return left; // to be replaced by student code
         }
+
+        @Override
         public void setRight(IAVLNode node)
         {
-//            return null; // to be replaced by student code
+            right = node;
         }
         public IAVLNode getRight()
         {
-            return null; // to be replaced by student code
+            return right;
         }
+
+        @Override
         public void setParent(IAVLNode node)
         {
 //            return null; // to be replaced by student code
