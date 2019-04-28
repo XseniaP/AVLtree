@@ -25,16 +25,19 @@ public class Main {
 //        tree.insert(14,"opa");
 
 
-        tree.insert(14,"forteen");
+        tree.insert(14,"fourteen");
         tree.insert(12,"twelve");
         tree.insert(11,"eleven");
         tree.insert(9,"nine");
-        tree.insert(16,"sixtieen");
-        tree.insert(21,"twentyone");
+        tree.insert(16,"sixteen");
+        tree.insert(21,"twenty one");
         tree.insert(8,"eight");
         tree.insert(18,"eighteen");
         tree.insert(10,"ten");
         tree.insert(17,"seventeen");
+
+        tree.insert(13,"Thirteen");
+        tree.insert(15,"Fifteen");
 
 
 //        String val = tree.search(181);
@@ -56,7 +59,24 @@ public class Main {
 
         System.out.println("Size:" + tree.size());
 
-//        printTree(tree.root);
+
+        AVLTree.IAVLNode temp = tree.getRoot();
+
+//        String temp1 = tree.select(10);
+//        System.out.println("Select 10 ->" + temp1);
+//        temp1 = tree.select(1);
+//        System.out.println("Select 1 ->" + temp1);
+
+//        System.out.println(tree.less(9));
+
+//        tree.delete(8); //delete leaf --- good
+//        tree.delete(11);
+//        tree.delete(16);
+//          tree.delete(9);
+//        tree.delete(12);
+//         tree.delete(21);
+        printTree(tree.root);
+
     }
 
     static void printTree(AVLTree.AVLNode root) {

@@ -337,9 +337,133 @@ public class AVLTree {
      * returns -1 if an item with key k was not found in the tree.
      */
     public int delete(int k) {
-        return 42;    // to be replaced by student code
+
+        keySet = new ArrayList();
+        this.keysToArray();
+        if(keySet.contains(k)) {
+
+            AVLNode toDelete = findWhereToInsert(root, k);
+
+            boolean left = false;
+            AVLNode parentOfRoot = toDelete.parent;
+
+            if(parentOfRoot != null) {
+                if (parentOfRoot.right == toDelete)
+                    left = false;
+                else
+                    left = true;
+
+
+                if (toDelete.right == null && toDelete.left == null) {       //if leaf
+                    if (left)
+                        parentOfRoot.left = null;
+                    else
+                        parentOfRoot.right = null;
+                }
+
+                if (toDelete.right != null && toDelete.left == null) {       //has right son
+
+                    AVLNode temp = toDelete.right;
+
+                    if (left) {
+                        parentOfRoot.setLeft(temp);
+                    } else {
+                        parentOfRoot.setRight(temp);
+                    }
+
+                    while (toDelete.parent != null)
+                        toDelete = toDelete.parent;
+
+
+                    temp.setParent(parentOfRoot);
+
+                    this.root = toDelete;
+
+                }
+
+                if (toDelete.right == null && toDelete.left != null) {       //has left son
+
+                    AVLNode temp = toDelete.left;
+
+
+                    if (left) {
+                        parentOfRoot.setLeft(temp);
+                    } else {
+                        parentOfRoot.setRight(temp);
+                    }
+
+                    while (toDelete.parent != null)
+                        toDelete = toDelete.parent;
+
+
+                    temp.setParent(parentOfRoot);
+
+                    this.root = toDelete;
+                }
+
+                if (toDelete.right != null && toDelete.left != null){
+                    AVLNode largestInLeftSubTree = toDelete;
+
+                    int MaxVal = findMaxInSubTree(largestInLeftSubTree.left);
+                    String MaxInfo = search(MaxVal);
+
+                    AVLNode toBeRemovedBecauseValueWasTransferred = findWhereToInsert(root,MaxVal);
+                    AVLNode parentOftoBeRemovedBecauseValueWasTransferred = toBeRemovedBecauseValueWasTransferred.parent;
+                    if(toBeRemovedBecauseValueWasTransferred == parentOftoBeRemovedBecauseValueWasTransferred.right)
+                        parentOftoBeRemovedBecauseValueWasTransferred.right = toBeRemovedBecauseValueWasTransferred.left;
+                    else
+                        parentOftoBeRemovedBecauseValueWasTransferred.left = toBeRemovedBecauseValueWasTransferred.left;
+
+                    toDelete.key = MaxVal;
+                    toDelete.info = MaxInfo;
+
+                    while (toDelete.parent != null)
+                        toDelete = toDelete.parent;
+
+                    this.root = toDelete;
+                }
+
+
+
+            }
+            else {          //if parent of deleted node is null; (root)
+                AVLNode largestInLeftSubTree = toDelete;
+
+                int MaxVal = findMaxInSubTree(largestInLeftSubTree.left);
+                String MaxInfo = search(MaxVal);
+
+                AVLNode toBeRemovedBecauseValueWasTransferred = findWhereToInsert(root,MaxVal);
+                AVLNode parentOftoBeRemovedBecauseValueWasTransferred = toBeRemovedBecauseValueWasTransferred.parent;
+                if(toBeRemovedBecauseValueWasTransferred == parentOftoBeRemovedBecauseValueWasTransferred.right)
+                    parentOftoBeRemovedBecauseValueWasTransferred.right = toBeRemovedBecauseValueWasTransferred.left;
+                else
+                    parentOftoBeRemovedBecauseValueWasTransferred.left = toBeRemovedBecauseValueWasTransferred.left;
+
+                toDelete.key = MaxVal;
+                toDelete.info = MaxInfo;
+            }
+
+
+
+
+
+
+            updateHeight(root);
+            return rebalance(root);
+        }
+        else
+            return -1;
+    }
+
+
+    private int findMaxInSubTree(AVLNode root){
+        if(root.right == null)
+            return root.key;
+        else
+            return Math.max(findMaxInSubTree(root.left),findMaxInSubTree(root.right));
 
     }
+
 
     /**
      * public String min()
@@ -378,7 +502,6 @@ public class AVLTree {
      * or an empty array if the tree is empty.
      */
     public int[] keysToArray() {
-        // to be replaced by student code
         keySet = new ArrayList();
         findAllKeysOrInfo(root);
         int[] arr = new int[keySet.size()];
@@ -415,7 +538,6 @@ public class AVLTree {
         findAllKeysOrInfo(root);
         String[] arr = new String[keySet.size()];
         Object[] bla = keySet.toArray();
-
         for(int i = 0;i < keySet.size(); i++){
             arr[i] = this.search((int)bla[i]);
         }
@@ -461,7 +583,20 @@ public class AVLTree {
      * postcondition: none
      */
     public String select(int i) {
-        return null;
+
+        if(empty() || i > size() || i < 1)
+            return null;
+        else
+        {
+            i = i-1;
+            keySet = new ArrayList();
+
+            this.keysToArray();
+
+            AVLNode temp = findWhereToInsert(root,(int) keySet.get(i));
+
+            return temp.info;
+        }
     }
 
     /**
@@ -474,7 +609,15 @@ public class AVLTree {
      * postcondition: none
      */
     public int less(int i) {
-        return 0;
+        keySet = new ArrayList();
+        int sum = 0;
+        this.keysToArray();
+
+        for(Object key: keySet.toArray()){
+            if((int) key <= i)
+                sum += (int)key;
+        }
+        return sum;
     }
 
     /**
