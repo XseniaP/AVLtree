@@ -14,10 +14,14 @@ public class AVLTree {
     AVLNode root;
     List factors;
     List keySet;
+    List infoSet;
+    int size;
     public AVLTree() {
         root = null;
+        size = 0;
         factors = new ArrayList();
         keySet = new ArrayList();
+        infoSet = new ArrayList();
         factors.add(1);
         factors.add(-1);
         factors.add(0);
@@ -88,6 +92,7 @@ public class AVLTree {
         if (root == null) {
             root = new AVLNode(k, i);
             root.height = 1;
+            size++;
             return 0;
         } else {
             AVLNode toInsert = findWhereToInsert(root, k);
@@ -107,8 +112,8 @@ public class AVLTree {
         }
         System.out.println();
         updateHeight(root);
-        rebalance(root);
-        return 0;
+        size++;
+        return rebalance(root);
     }
 
 
@@ -374,8 +379,8 @@ public class AVLTree {
      */
     public int[] keysToArray() {
         // to be replaced by student code
-
-        findAllKeys(root);
+        keySet = new ArrayList();
+        findAllKeysOrInfo(root);
         int[] arr = new int[keySet.size()];
 
         Collections.sort(keySet);
@@ -384,17 +389,17 @@ public class AVLTree {
              arr[i] = (int) bla[i];
         }
 
-        return arr;              // to be replaced by student code
+        return arr;
     }
 
-    void findAllKeys(AVLNode root){
+    private void findAllKeysOrInfo(AVLNode root){
         if(root == null)
             return;
 
-        keySet.add(root.key);
+            keySet.add(root.key);
 
-        findAllKeys(root.right);
-        findAllKeys(root.left);
+        findAllKeysOrInfo(root.right);
+        findAllKeysOrInfo(root.left);
     }
 
     /**
@@ -405,8 +410,16 @@ public class AVLTree {
      * or an empty array if the tree is empty.
      */
     public String[] infoToArray() {
-        String[] arr = new String[42]; // to be replaced by student code
-        return arr;                    // to be replaced by student code
+        this.keysToArray();
+        infoSet = new ArrayList();
+        findAllKeysOrInfo(root);
+        String[] arr = new String[keySet.size()];
+        Object[] bla = keySet.toArray();
+
+        for(int i = 0;i < keySet.size(); i++){
+            arr[i] = this.search((int)bla[i]);
+        }
+        return arr;
     }
 
     /**
@@ -418,8 +431,7 @@ public class AVLTree {
      * postcondition: none
      */
     public int size() {
-
-        return 0;
+        return size;
     }
 
     /**

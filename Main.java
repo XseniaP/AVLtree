@@ -25,16 +25,16 @@ public class Main {
 //        tree.insert(14,"opa");
 
 
-        tree.insert(14,"mil");
-        tree.insert(12,"bla");
-        tree.insert(11,"mak");
-        tree.insert(9,"cak");
-        tree.insert(16,"for");
-        tree.insert(21,"mor");
-        tree.insert(8,"mof");
-        tree.insert(18,"bax");
-        tree.insert(10,"asd");
-        tree.insert(17,"opa");
+        tree.insert(14,"forteen");
+        tree.insert(12,"twelve");
+        tree.insert(11,"eleven");
+        tree.insert(9,"nine");
+        tree.insert(16,"sixtieen");
+        tree.insert(21,"twentyone");
+        tree.insert(8,"eight");
+        tree.insert(18,"eighteen");
+        tree.insert(10,"ten");
+        tree.insert(17,"seventeen");
 
 
 //        String val = tree.search(181);
@@ -52,7 +52,9 @@ public class Main {
         int arr[] = tree.keysToArray();
 
 
+        String[] arrInfo = tree.infoToArray();
 
+        System.out.println("Size:" + tree.size());
 
 //        printTree(tree.root);
     }
