@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * AVLTree
@@ -9,14 +13,17 @@
 
 public class AVLTree {
 
-    /**
-     * public boolean empty()
-     *
-     * returns true if and only if the tree is empty
-     *
-     */
+    AVLNode root;
+
+    public AVLTree() {
+        root = null;
+    }
+
+
+
     public boolean empty() {
-        return false; // to be replaced by student code
+
+        return root == null;
     }
 
     /**
@@ -38,9 +45,181 @@ public class AVLTree {
      * returns the number of rebalancing operations, or 0 if no rebalancing operations were necessary.
      * returns -1 if an item with key k already exists in the tree.
      */
-    public int insert(int k, String i) {
-        return 42;	// to be replaced by student code
+
+    private AVLNode findWhereToInsert(AVLNode root,int k) {
+        if (root == null)
+            return root;
+
+        if ( k > root.key) {
+            if(root.right!= null)
+                root = root.right;
+            else
+                return root;
+
+            return findWhereToInsert(root, k);
+        }
+
+        if (k < root.key) {
+            if(root.left!= null)
+                root = root.left;
+            else
+                return root;
+
+            return findWhereToInsert(root, k);
+        }
+        else
+            return root;
     }
+
+    public int insert(int k, String i) {
+        if (root == null) {
+            root = new AVLNode(k, i);
+            root.height = 1;
+            return 0;
+        }
+        else {
+            AVLNode toInsert = findWhereToInsert(root, k);
+
+            if ( k > toInsert.key) {
+                AVLNode temp = new AVLNode(k,i);
+                temp.setParent(toInsert);
+                toInsert.right = temp;
+            }
+
+            if (k < root.key) {
+                AVLNode temp = new AVLNode(k,i);
+                temp.setParent(toInsert);
+
+                toInsert.left = temp;
+            }
+        }
+        System.out.println();
+        updateHeight(root);
+        rebalance(root);
+        return 0;
+    }
+
+
+
+    //node height = Height of its left subtree – Height of its right subtree
+
+    void updateHeight(AVLNode root){
+        if(root == null)
+            return;
+
+        updateHeight(root.left);
+        updateHeight(root.right);
+
+
+        if (root.left == null && root.right == null)//leafs
+                root.height = 1;
+
+        if(root.left == null && root.right != null){ //right and not left
+
+            root.height =  root.right.height + 1;
+
+
+            //do else
+        }
+        if(root.left != null && root.right == null){ //left and not right
+            root.height = root.left.height +1 ;
+
+            //do else
+        }
+        if(root.left != null && root.right != null) {
+
+            root.height =  root.left.height > root.right.height ? root.left.height + 1  : root.right.height + 1;
+        }
+        System.out.println("Key: " + root.key + " - Height: " + root.height);
+    }
+
+
+
+    public int rebalance(AVLNode root){
+        List factors = new ArrayList();
+        factors.add(1);
+        factors.add(-1);
+        factors.add(0);
+
+
+        if(root == null){
+            return 0;
+        }
+
+        int i = rebalance(root.left) + rebalance(root.right);
+
+
+
+            int balanceFactor = 0;
+            if(root.left != null && root.right != null) {
+                balanceFactor = root.left.height - root.right.height;
+
+            }
+            if(root.left == null && root.right != null) {
+                balanceFactor = 0 - root.right.height;
+
+            }
+
+            if(root.left != null && root.right == null) {
+                balanceFactor = root.left.height;
+
+            }
+
+            if(root.left == null && root.right == null) {
+                balanceFactor = 0;
+
+            }
+
+
+
+            if (factors.contains(balanceFactor)) {
+                //do nothing
+            } else {
+                if (root.left == null && root.right != null & root.right.right != null) //left rotation
+                {
+                    System.out.println("Left rotation");
+                    AVLNode temp = root;
+                    AVLNode newRoot = root.right;
+                    newRoot.parent = root.parent;
+                    root.right = null;
+                    newRoot.left = root;
+
+
+                    root.parent = newRoot;
+                    this.root = newRoot;
+
+                    updateHeight(this.root);
+                    return 1;
+                }
+            }
+
+
+
+
+
+        return i + 1;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * public int delete(int k)
@@ -112,7 +291,8 @@ public class AVLTree {
      */
     public int size()
     {
-        return 42; // to be replaced by student code
+
+       return 0;
     }
 
     /**
@@ -125,7 +305,10 @@ public class AVLTree {
      */
     public IAVLNode getRoot()
     {
-        return null;
+        if(root != null)
+            return root;
+        else
+            return null;
     }
     /**
      * public string select(int i)
@@ -187,23 +370,34 @@ public class AVLTree {
         String info;
         int key;
         int height;
-        IAVLNode left, right;
+        AVLNode left, right,parent;
 
-        public AVLNode(int _key,int _height,String _info,IAVLNode _left,IAVLNode _right){
-            key = _key;
-            height = _height;
-            info = _info;
-            left = _left;
-            right = _right;
-        }
         public AVLNode(int _key){
             key = _key;
             height = 0;
             info = "";
             left = null;
             right = null;
+            parent = null;
+        }
+        public AVLNode(int _key,String _info){
+            key = _key;
+            height = 0;
+            info = _info;
+            left = null;
+            right = null;
+            parent = null;
         }
 
+        public AVLNode()
+        {
+            key = 0;
+            height = 0;
+            info = "";
+            left = null;
+            right = null;
+            parent = null;
+        }
 
 
         public int getKey()
@@ -218,7 +412,7 @@ public class AVLTree {
         @Override
         public void setLeft(IAVLNode node)
         {
-            left = node;
+            left = (AVLNode) node;
         }
         public IAVLNode getLeft()
         {
@@ -228,7 +422,7 @@ public class AVLTree {
         @Override
         public void setRight(IAVLNode node)
         {
-            right = node;
+            right = (AVLNode) node;
         }
         public IAVLNode getRight()
         {
@@ -238,11 +432,11 @@ public class AVLTree {
         @Override
         public void setParent(IAVLNode node)
         {
-//            return null; // to be replaced by student code
+            parent = (AVLNode) node;
         }
         public IAVLNode getParent()
         {
-            return null; // to be replaced by student code
+            return parent; // to be replaced by student code
         }
         // Returns True if this is a non-virtual AVL node
         public boolean isRealNode()
@@ -256,6 +450,13 @@ public class AVLTree {
         public int getSubtreeSize()
         {
             return 42; // to be replaced by student code
+        }
+
+        public int getHeight() {
+            return height;
+        }
+        public void setHeight(int _height){
+            height = _height;
         }
     }
 
