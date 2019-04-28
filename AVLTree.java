@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,11 +11,16 @@ import java.util.List;
  */
 
 public class AVLTree {
-
     AVLNode root;
-
+    List factors;
+    List keySet;
     public AVLTree() {
         root = null;
+        factors = new ArrayList();
+        keySet = new ArrayList();
+        factors.add(1);
+        factors.add(-1);
+        factors.add(0);
     }
 
 
@@ -161,19 +167,15 @@ public class AVLTree {
             balanceFactor = 0;
 
         }
-
-
-
-
         return balanceFactor;
     }
 
-    public int rebalance(AVLNode root) {
-        List factors = new ArrayList();
-        factors.add(1);
-        factors.add(-1);
-        factors.add(0);
 
+    public int rebalance(AVLNode root) {
+//        List factors = new ArrayList();
+//        factors.add(1);
+//        factors.add(-1);
+//        factors.add(0);
 
         if (root == null) {
             return 0;
@@ -197,6 +199,7 @@ public class AVLTree {
                     if(balanceFactorOfLeft == 1) //simple right rotation
                     {
                         rightRotation(root);
+                        i++;
                     }
                     else
                     {
@@ -213,6 +216,7 @@ public class AVLTree {
                         tempA.right = null;
                         updateHeight(this.root);
                         rightRotation(root);
+                        i += 2;
                     }
 
                     break;
@@ -226,6 +230,7 @@ public class AVLTree {
                     {
                         System.out.println("Left rotation");
                         leftRotation(root);
+                        i++;
                     }
                     else {
                         System.out.println("Right-Left- Rotation");
@@ -236,71 +241,19 @@ public class AVLTree {
                         tempB.right = tempC;
                         tempC.setParent(tempB);
                         tempC.setLeft(null);
-
-
-
-
                         updateHeight(this.root);
                         leftRotation(root);
-
-
-
+                        i+=2;
                     }
 
                     System.out.println();
-
-
-
                     break;
                 }
             }
-
-
-
-
-//            if (root.left == null && root.right != null & root.right.right != null) //left rotation
-//            {
-//
-//                leftRotation(root);
-//                return 1;
-//            }
-//            if (root.right == null && root.left != null & root.left.left != null) //Right rotation
-//            {
-//                rightRotation(root);
-//                return 1;
-//            }
-//            if (root.left != null && root.right == null && root.left.right != null && root.left.left == null) { //Left-Right Rotation
-//
-//                System.out.println("Left-Right rotation");
-//                AVLNode tempA = root.left;
-//                AVLNode tempB = root.left.right;
-//                root.left = tempB;
-//                tempB.parent = root;
-//                tempA.parent = tempB;
-//                tempB.left = tempA;
-//                tempA.right = null;
-//                updateHeight(this.root);
-//                rightRotation(root);
-//            }
-//            if (root.left == null && root.right == null && root.left.right != null && root.left.left == null) { //Right-Left- Rotation
-//
-//                System.out.println("Right-Left- Rotation");
-//                AVLNode tempA = root.left;
-//                AVLNode tempB = root.left.right;
-//                root.left = tempB;
-//                tempB.parent = root;
-//                tempA.parent = tempB;
-//                tempB.left = tempA;
-//                tempA.right = null;
-//                updateHeight(this.root);
-//                rightRotation(root);
-//            }
-
-
         }
 
 
-        return i + 1;
+        return i;
     }
 
 
@@ -350,27 +303,18 @@ public class AVLTree {
             else
                 left = true;
         }
-
-
-
-
         AVLNode newRoot = root.left;
         newRoot.setParent(root.parent);
         root.setLeft(null);
         newRoot.setRight(root);
         root.setParent(newRoot);
         root = newRoot;
-
-
         if(parentOfRoot != null) {
             if (left)
                 parentOfRoot.left = root;
             else
                 parentOfRoot.right = root;
-
         }
-
-
         while (root.parent != null)
             root = root.parent;
 
@@ -389,6 +333,7 @@ public class AVLTree {
      */
     public int delete(int k) {
         return 42;    // to be replaced by student code
+
     }
 
     /**
@@ -398,7 +343,12 @@ public class AVLTree {
      * or null if the tree is empty
      */
     public String min() {
-        return "42"; // to be replaced by student code
+       AVLNode temp = root;
+        while(temp.left != null)
+            temp = temp.left;
+
+        return temp.info;
+
     }
 
     /**
@@ -408,7 +358,12 @@ public class AVLTree {
      * or null if the tree is empty
      */
     public String max() {
-        return "42"; // to be replaced by student code
+        AVLNode temp = root;
+        while(temp.right != null)
+            temp = temp.right;
+
+        return temp.info;
+
     }
 
     /**
@@ -418,8 +373,28 @@ public class AVLTree {
      * or an empty array if the tree is empty.
      */
     public int[] keysToArray() {
-        int[] arr = new int[42]; // to be replaced by student code
+        // to be replaced by student code
+
+        findAllKeys(root);
+        int[] arr = new int[keySet.size()];
+
+        Collections.sort(keySet);
+         Object[] bla = keySet.toArray();
+         for(int i = 0;i < keySet.size(); i++){
+             arr[i] = (int) bla[i];
+        }
+
         return arr;              // to be replaced by student code
+    }
+
+    void findAllKeys(AVLNode root){
+        if(root == null)
+            return;
+
+        keySet.add(root.key);
+
+        findAllKeys(root.right);
+        findAllKeys(root.left);
     }
 
     /**

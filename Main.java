@@ -40,6 +40,18 @@ public class Main {
 //        String val = tree.search(181);
 //        System.out.println(val);
 
+//
+//        String min = tree.min();
+//        System.out.println("Min:" + min);
+
+        //
+//        String max = tree.max();
+//        System.out.println("Max:" + max);
+
+
+        int arr[] = tree.keysToArray();
+
+
 
 
 //        printTree(tree.root);
